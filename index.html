@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAYNA DIGITAL — Formularz danych do umowy zlecenia</title>
+<style>
+  :root{ --forest:#285642; --gold:#C9972B; --bg:#f6f7f5; --line:#dcdcd6; --ink:#1c2420; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;line-height:1.5;}
+  header{background:var(--forest);color:#fff;padding:22px 18px;border-bottom:4px solid var(--gold);}
+  header .co{font-weight:800;font-size:19px;letter-spacing:.3px;}
+  header .req{font-size:11px;opacity:.85;margin-top:3px;}
+  header h1{font-size:16px;margin:12px 0 0;font-weight:600;}
+  header p.intro{font-size:12.5px;opacity:.92;margin:6px 0 0;max-width:760px;}
+  main{max-width:780px;margin:0 auto;padding:18px 16px 60px;}
+  .sec{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:16px 0;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+  .sec h2{color:var(--forest);font-size:15px;margin:0 0 4px;border-bottom:2px solid var(--gold);padding-bottom:6px;}
+  .sec .hint{font-size:12px;color:#6b6f6a;margin:0 0 12px;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px;}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+  .f{display:flex;flex-direction:column;}
+  .f.full{grid-column:1/-1;}
+  label{font-size:12.5px;font-weight:600;margin-bottom:4px;}
+  label .req{color:#b3261e;}
+  input[type=text],input[type=tel],input[type=email],input[type=date],select,textarea{
+    border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:14px;font-family:inherit;background:#fff;}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--forest);box-shadow:0 0 0 3px rgba(40,86,66,.12);}
+  .tip{font-size:11px;color:#8a8f88;margin-top:3px;}
+  .q{padding:10px 0;border-bottom:1px dashed var(--line);}
+  .q:last-child{border-bottom:none;}
+  .q .qt{font-size:13.5px;margin-bottom:6px;}
+  .yn{display:flex;gap:8px;}
+  .yn label{display:flex;align-items:center;gap:5px;font-weight:500;border:1px solid var(--line);border-radius:8px;padding:6px 14px;cursor:pointer;font-size:13px;}
+  .yn input{accent-color:var(--forest);}
+  .chk{display:flex;gap:9px;align-items:flex-start;padding:9px 0;}
+  .chk input{margin-top:3px;accent-color:var(--forest);width:17px;height:17px;flex:0 0 auto;}
+  .chk .txt{font-size:13px;}
+  .chk .txt b{color:var(--forest);}
+  .pill{display:inline-block;background:#eef3ef;color:var(--forest);border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700;margin-left:6px;}
+  .opt{font-weight:400;color:#7a7f78;font-size:11px;}
+  .sub{margin:10px 0 4px;font-weight:700;font-size:13px;color:var(--forest);}
+  .inline{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;}
+  .inline label{font-weight:500;font-size:13px;display:flex;align-items:center;gap:5px;}
+  .actions{position:sticky;bottom:0;background:linear-gradient(180deg,rgba(246,247,245,0),var(--bg) 28%);padding:18px 0 6px;display:flex;gap:10px;flex-wrap:wrap;}
+  button{font-family:inherit;font-size:15px;font-weight:700;border:none;border-radius:10px;padding:13px 22px;cursor:pointer;}
+  button.primary{background:var(--forest);color:#fff;}
+  button.ghost{background:#fff;color:var(--forest);border:1.5px solid var(--forest);}
+  button:disabled{opacity:.5;cursor:not-allowed;}
+  .err{color:#b3261e;font-size:12px;margin-top:4px;display:none;}
+  .note-legal{font-size:11px;color:#8a8f88;margin-top:14px;}
+  #done{display:none;background:#eef3ef;border:1px solid var(--forest);border-radius:12px;padding:18px;margin-top:16px;}
+  #done h3{color:var(--forest);margin:0 0 6px;}
+  textarea#jsonout{width:100%;height:150px;font-family:ui-monospace,Menlo,monospace;font-size:11px;margin-top:8px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="co">FAYNA DIGITAL sp. z o.o.</div>
+  <div class="req">ul. Kaliska 45, 63-400 Ostrów Wielkopolski · KRS 0001211419 · NIP 6222868819 · hallo@fayna.agency</div>
+  <h1>Formularz danych do umowy zlecenia</h1>
+  <p class="intro">Dzień dobry! Aby przygotować komplet dokumentów gotowych do podpisu (umowa zlecenia nr 1/UZ/2026,
+  kwestionariusz, oświadczenie ZUS/US i podatki, klauzula RODO, upoważnienie do przetwarzania danych), prosimy o
+  wypełnienie poniższych pól. Zajmie to ok. 5 minut. Pola oznaczone <span style="color:#ffd9d4">*</span> są wymagane.</p>
+</header>
+
+<main>
+<form id="kform" novalidate>
+
+  <!-- 1. DANE OSOBOWE -->
+  <section class="sec">
+    <h2>1. Dane osobowe</h2>
+    <p class="hint">Dane służą zawarciu i wykonaniu umowy oraz rozliczeniom ZUS i podatkowym (art. 6 ust. 1 lit. b i c RODO).</p>
+    <div class="grid">
+      <div class="f"><label>Imię i nazwisko <span class="req">*</span></label><input type="text" name="fullname" required></div>
+      <div class="f"><label>Nazwisko rodowe</label><input type="text" name="nazwisko_rodowe"></div>
+      <div class="f"><label>Imiona rodziców</label><input type="text" name="imiona_rodzicow" placeholder="np. Jan, Anna"></div>
+      <div class="f"><label>Obywatelstwo <span class="req">*</span></label><input type="text" name="obywatelstwo" value="polskie" required></div>
+      <div class="f"><label>Data urodzenia <span class="req">*</span></label><input type="date" name="data_urodzenia" required></div>
+      <div class="f"><label>Miejsce urodzenia <span class="req">*</span></label><input type="text" name="miejsce_urodzenia" required></div>
+      <div class="f"><label>PESEL <span class="req">*</span></label><input type="text" name="pesel" inputmode="numeric" maxlength="11" pattern="\d{11}" required><div class="tip">11 cyfr</div></div>
+      <div class="f"><label>Rodzaj i numer dokumentu tożsamości <span class="req">*</span></label><input type="text" name="dowod" placeholder="dowód osobisty / paszport — seria i numer" required></div>
+    </div>
+    <div class="sub">Adres zameldowania <span class="req">*</span></div>
+    <div class="grid">
+      <div class="f full"><label>Ulica, nr domu / lokalu</label><input type="text" name="adres_zam_ulica" required></div>
+      <div class="f"><label>Kod pocztowy</label><input type="text" name="adres_zam_kod" placeholder="00-000" required></div>
+      <div class="f"><label>Miejscowość</label><input type="text" name="adres_zam_miasto" required></div>
+      <div class="f"><label>Województwo</label><input type="text" name="adres_zam_woj"></div>
+      <div class="f"><label>Powiat / gmina</label><input type="text" name="adres_zam_powiat_gmina"></div>
+    </div>
+    <div class="sub">Adres do korespondencji <span class="opt">(jeśli inny niż zameldowania)</span></div>
+    <div class="f full"><input type="text" name="adres_koresp" placeholder="zostaw puste jeśli taki sam"></div>
+    <div class="grid" style="margin-top:12px">
+      <div class="f"><label>Telefon <span class="req">*</span></label><input type="tel" name="tel" required></div>
+      <div class="f"><label>E-mail <span class="req">*</span></label><input type="email" name="email" required></div>
+      <div class="f"><label>Wykształcenie</label><input type="text" name="wyksztalcenie" placeholder="np. wyższe ekonomiczne (licencjat)"></div>
+      <div class="f"><label>Zawód wykonywany</label><input type="text" name="zawod"></div>
+      <div class="f"><label>Oddział NFZ</label><input type="text" name="nfz" placeholder="np. Wielkopolski / Łódzki"></div>
+      <div class="f"><label>Właściwy Urząd Skarbowy</label><input type="text" name="us"></div>
+      <div class="f full"><label>Numer rachunku bankowego (do wypłaty) <span class="req">*</span></label><input type="text" name="iban" placeholder="PL.. .. .. .. .. .. .." required></div>
+    </div>
+  </section>
+
+  <!-- 2. STATUS ZUS -->
+  <section class="sec">
+    <h2>2. Status ubezpieczeniowy (ZUS)</h2>
+    <p class="hint">Na tej podstawie ustalamy, jakie składki są obowiązkowe. Proszę odpowiedzieć na każde pytanie.</p>
+    <div id="zus"></div>
+    <div class="sub">Ubezpieczenia dobrowolne</div>
+    <label class="chk"><input type="checkbox" name="dobr_emer_rent"><span class="txt">Wnoszę o objęcie dobrowolnym ubezpieczeniem <b>emerytalnym i rentowym</b> z tytułu tej umowy.</span></label>
+    <label class="chk"><input type="checkbox" name="dobr_chor"><span class="txt">Wnoszę o objęcie dobrowolnym ubezpieczeniem <b>chorobowym</b> <span class="opt">(nie dotyczy studentów do 26 r.ż.)</span>.</span></label>
+  </section>
+
+  <!-- 3. PODATKI -->
+  <section class="sec">
+    <h2>3. Oświadczenia podatkowe (PIT)</h2>
+    <p class="hint">Wpływają na wysokość zaliczki na podatek. W razie wątpliwości zostaw domyślne — biuro rachunkowe doprecyzuje.</p>
+    <label class="chk"><input type="checkbox" name="pit2"><span class="txt"><b>PIT-2</b> — wnoszę o stosowanie kwoty zmniejszającej zaliczkę na podatek u FAYNA DIGITAL.</span></label>
+    <div class="inline" style="margin:2px 0 8px 28px">
+      <span class="opt">jeśli zaznaczono, w jakiej części:</span>
+      <label><input type="radio" name="pit2_czesc" value="1/12">1/12</label>
+      <label><input type="radio" name="pit2_czesc" value="1/24">1/24</label>
+      <label><input type="radio" name="pit2_czesc" value="1/36">1/36</label>
+    </div>
+    <label class="chk"><input type="checkbox" name="bez_zaliczki"><span class="txt">Wnoszę o <b>niepobieranie zaliczki</b> — przewiduję, że roczny dochód nie przekroczy kwoty wolnej (art. 41 ust. 1c ustawy o PIT).</span></label>
+    <div class="sub">Koszty uzyskania przychodu</div>
+    <div class="inline" style="margin-left:4px">
+      <label><input type="radio" name="kup" value="20" checked>20% (standardowe)</label>
+      <label><input type="radio" name="kup" value="50">50% do części autorskiej (§ 7 umowy)</label>
+    </div>
+    <div class="sub">Ulga dla młodych (do 26 r.ż.)</div>
+    <div class="inline" style="margin-left:4px">
+      <label><input type="radio" name="ulga26" value="nie_dotyczy" checked>nie dotyczy (mam ≥ 26 lat)</label>
+      <label><input type="radio" name="ulga26" value="dotyczy">dotyczy</label>
+      <label><input type="checkbox" name="ulga26_niestosowac">wnoszę o niestosowanie ulgi</label>
+    </div>
+  </section>
+
+  <!-- 4. ZGODY I OŚWIADCZENIA -->
+  <section class="sec">
+    <h2>4. Zgody i oświadczenia <span class="pill">RODO</span></h2>
+    <p class="hint">Administrator danych: FAYNA DIGITAL sp. z o.o. Pełna klauzula art. 13 RODO w przygotowanych dokumentach.</p>
+    <label class="chk"><input type="checkbox" name="zgoda_rodo_info" required><span class="txt">Potwierdzam, że zapoznałem(-am) się z <b>klauzulą informacyjną RODO</b>. Przyjmuję do wiadomości, że dane niezbędne do umowy przetwarzane są na podstawie art. 6 ust. 1 lit. b i c RODO (zgoda nie jest wymagana). <span class="req">*</span></span></label>
+    <label class="chk"><input type="checkbox" name="akcept_warunki" required><span class="txt">Potwierdzam, że zapoznałem(-am) się z <b>warunkami umowy zlecenia</b> (wynagrodzenie: część stała 2 500 zł brutto/mies. + 120 zł brutto za każdą zakończoną sprzedaż; praca zdalna; poufność). <span class="req">*</span></span></label>
+    <div class="sub">Zgody dobrowolne <span class="opt">(brak nie wpływa na zawarcie umowy)</span></div>
+    <label class="chk"><input type="checkbox" name="zgoda_marketing"><span class="txt">Wyrażam zgodę na przetwarzanie danych w celach <b>marketingowych</b> (art. 6 ust. 1 lit. a RODO).</span></label>
+    <label class="chk"><input type="checkbox" name="zgoda_wizerunek"><span class="txt">Wyrażam zgodę na utrwalanie i wykorzystanie mojego <b>wizerunku</b> (zdjęcia/nagrania zespołowe) do celów wewnętrznych i promocyjnych.</span></label>
+  </section>
+
+  <div class="err" id="err">Proszę uzupełnić wymagane pola (oznaczone *).</div>
+  <div class="actions">
+    <button type="submit" class="primary">Wyślij i wygeneruj dokumenty</button>
+    <button type="button" class="ghost" id="dl">Pobierz odpowiedzi (JSON)</button>
+  </div>
+  <p class="note-legal">Po wysłaniu przygotujemy komplet PDF na podstawie podanych danych. Dokumenty otrzymasz do pobrania i
+  podpiszesz po swojej stronie <b>Profilem Zaufanym (podpisem zaufanym)</b>. Twoje dane są przetwarzane przez FAYNA DIGITAL sp. z o.o.
+  zgodnie z RODO.</p>
+
+  <div id="done">
+    <h3>Dziękujemy! ✅</h3>
+    <p style="font-size:13px;margin:4px 0">Odpowiedzi zostały zapisane. Poniżej kopia danych (na wypadek, gdyby trzeba było wysłać ręcznie):</p>
+    <textarea id="jsonout" readonly></textarea>
+  </div>
+</form>
+</main>
+
+<script>
+// === konfiguracja ===
+// Po wdrożeniu ustaw adres backendu (np. funkcja netlify / endpoint Odoo). Pusty = tylko pobranie JSON.
+const ENDPOINT = ""; // np. "https://campscout.pl/.netlify/functions/submit-kadry"
+
+// 9 pytań statusu ZUS (Sekcja B oświadczenia)
+const ZUS = [
+ ["zus1","Jestem zatrudniony(-a) u innego pracodawcy z wynagrodzeniem co najmniej minimalnym"],
+ ["zus2","Wykonuję inną umowę zlecenia objętą obowiązkowym ZUS"],
+ ["zus3","Prowadzę działalność gospodarczą objętą obowiązkowym ZUS"],
+ ["zus4","Jestem emerytem(-ką)"],
+ ["zus5","Jestem rencistą(-ką)"],
+ ["zus6","Jestem studentem/uczniem i nie ukończyłem(-am) 26 lat"],
+ ["zus7","Jestem zarejestrowany(-a) jako bezrobotny(-a)"],
+ ["zus8","Przebywam na urlopie macierzyńskim/wychowawczym lub mam świadczenie przedemerytalne"],
+ ["zus9","Podlegam ubezpieczeniu w KRUS"],
+];
+const zusBox=document.getElementById('zus');
+ZUS.forEach(([n,t])=>{
+  const d=document.createElement('div');d.className='q';
+  d.innerHTML=`<div class="qt">${t}</div><div class="yn">
+    <label><input type="radio" name="${n}" value="TAK" required>TAK</label>
+    <label><input type="radio" name="${n}" value="NIE">NIE</label></div>`;
+  zusBox.appendChild(d);
+});
+
+// prefill znanych danych Daniela (edytowalne)
+const PREFILL={};  /* публічна версія — без преднаповнення особистих даних */
+for(const[k,v] of Object.entries(PREFILL)){const el=document.querySelector(`[name="${k}"]`);if(el&&!el.value)el.value=v;}
+
+function collect(){
+  const fd=new FormData(document.getElementById('kform'));
+  const o={meta:{firma:"FAYNA DIGITAL sp. z o.o.",umowa_nr:"1/UZ/2026",wyslano:new Date().toISOString()}};
+  // pola tekstowe i radio
+  for(const[k,v] of fd.entries()) o[k]=v;
+  // checkboxy (gdy niezaznaczone, FormData je pomija → ustaw false)
+  document.querySelectorAll('#kform input[type=checkbox]').forEach(c=>{ if(!(c.name in o)) o[c.name]= c.checked; else o[c.name]=true; });
+  return o;
+}
+function download(o){
+  const blob=new Blob([JSON.stringify(o,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='odpowiedzi_'+(o.fullname||'kandydat').replace(/\s+/g,'_')+'.json';a.click();
+}
+document.getElementById('dl').onclick=()=>download(collect());
+
+document.getElementById('kform').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const form=e.target, err=document.getElementById('err');
+  if(!form.checkValidity()){ err.style.display='block'; form.reportValidity(); return; }
+  err.style.display='none';
+  const data=collect();
+  document.getElementById('jsonout').value=JSON.stringify(data,null,2);
+  document.getElementById('done').style.display='block';
+  document.getElementById('done').scrollIntoView({behavior:'smooth'});
+  if(ENDPOINT){
+    try{ await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}); }
+    catch(_){ download(data); }
+  } else { download(data); }
+});
+</script>
+</body>
+</html>
