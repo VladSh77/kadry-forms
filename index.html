@@ -53,6 +53,9 @@
   #done h3{color:var(--forest);margin:0 0 6px;}
   textarea#jsonout{width:100%;height:150px;font-family:ui-monospace,Menlo,monospace;font-size:11px;margin-top:8px;}
 </style>
+<script src="pdfmake.min.js"></script>
+<script src="vfs_fonts.js"></script>
+<script src="kadry_browser.js"></script>
 </head>
 <body>
 <header>
@@ -151,16 +154,13 @@
   <div class="err" id="err">Proszę uzupełnić wymagane pola (oznaczone *).</div>
   <div class="actions">
     <button type="submit" class="primary">Wyślij i wygeneruj dokumenty</button>
-    <button type="button" class="ghost" id="dl">Pobierz odpowiedzi (JSON)</button>
+    <button type="button" class="ghost" id="dl">Pobierz dokumenty (PDF)</button>
   </div>
-  <p class="note-legal">Po wysłaniu przygotujemy komplet PDF na podstawie podanych danych. Dokumenty otrzymasz do pobrania i
-  podpiszesz po swojej stronie <b>Profilem Zaufanym (podpisem zaufanym)</b>. Twoje dane są przetwarzane przez FAYNA DIGITAL sp. z o.o.
-  zgodnie z RODO.</p>
+  <p class="note-legal">Po kliknięciu „Wyślij" dokumenty wygenerują się od razu w Twojej przeglądarce i pobiorą się jako pliki PDF — nic nie jest wysyłane bez Twojej wiedzy. Twoje dane przetwarza FAYNA DIGITAL sp. z o.o. zgodnie z RODO.</p>
 
   <div id="done">
     <h3>Dziękujemy! ✅</h3>
-    <p style="font-size:13px;margin:4px 0">Odpowiedzi zostały zapisane. Poniżej kopia danych (na wypadek, gdyby trzeba było wysłać ręcznie):</p>
-    <textarea id="jsonout" readonly></textarea>
+    <p style="font-size:13px;margin:4px 0">Pobrano komplet <b>5 dokumentów PDF</b> (umowa zlecenia, kwestionariusz, oświadczenie ZUS/US, klauzula RODO, upoważnienie). Prosimy je sprawdzić, <b>podpisać Profilem Zaufanym</b> i odesłać. Jeśli pobieranie nie ruszyło — kliknij „Pobierz dokumenty (PDF)".</p>
   </div>
 </form>
 </main>
@@ -192,7 +192,7 @@ ZUS.forEach(([n,t])=>{
 });
 
 // prefill znanych danych Daniela (edytowalne)
-const PREFILL={};  /* публічна версія — без преднаповнення особистих даних */
+const PREFILL={};
 for(const[k,v] of Object.entries(PREFILL)){const el=document.querySelector(`[name="${k}"]`);if(el&&!el.value)el.value=v;}
 
 function collect(){
@@ -209,17 +209,26 @@ function download(o){
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
   a.download='odpowiedzi_'+(o.fullname||'kandydat').replace(/\s+/g,'_')+'.json';a.click();
 }
-document.getElementById('dl').onclick=()=>download(collect());
-
+function buildA(){ const o=collect(); delete o.meta; return o; }
+async function generate(){
+  const A=buildA();
+  if(!window.KADRY||!window.pdfMake){ alert('Generator dokumentów nie załadował się. Odśwież stronę.'); return false; }
+  window.KADRY.genAll(A);              // pobiera 5 gotowych PDF
+  if(ENDPOINT){ try{ await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(A)});}catch(_){} }
+  return true;
+}
+document.getElementById('dl').onclick=()=>generate();
 document.getElementById('kform').addEventListener('submit',async e=>{
   e.preventDefault();
   const form=e.target, err=document.getElementById('err');
   if(!form.checkValidity()){ err.style.display='block'; form.reportValidity(); return; }
   err.style.display='none';
-  const data=collect();
-  document.getElementById('jsonout').value=JSON.stringify(data,null,2);
-  document.getElementById('done').style.display='block';
-  document.getElementById('done').scrollIntoView({behavior:'smooth'});
+  const okGen=await generate();
+  if(okGen){
+    document.getElementById('done').style.display='block';
+    document.getElementById('done').scrollIntoView({behavior:'smooth'});
+  }
+})
   if(ENDPOINT){
     try{ await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}); }
     catch(_){ download(data); }
