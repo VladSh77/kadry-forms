@@ -576,14 +576,28 @@ var DOCS = [
   ['4_Oswiadczenie_ZUS_podatki', docZUS],
   ['5_Upowaznienie_RODO_art29', docUpowaznienie],
 ];
+// Усі 5 документів в ОДИН PDF (один файл = одне завантаження = один підпis Profilem Zaufanym;
+// уникаємо блокування браузером множинних .download()).
+function buildCombined(A){
+  A = A || {};
+  var content = [];
+  DOCS.forEach(function(d, i){
+    var dd = d[1](A);
+    if (i > 0) content.push({ text:'', pageBreak:'before' });
+    content = content.concat(dd.content);
+  });
+  return {
+    pageSize:'A4', pageMargins:[40,44,40,40],
+    defaultStyle:{ font:'Roboto', fontSize:9, color:'#1a1a1a' },
+    content: content,
+  };
+}
 function genAll(A){
   var slug = (A && A.fullname ? A.fullname : 'kandydat').trim().replace(/\s+/g,'_');
-  DOCS.forEach(function(d){
-    pdfMake.createPdf(d[1](A||{})).download(d[0] + '_' + slug + '.pdf');
-  });
+  pdfMake.createPdf(buildCombined(A)).download('Dokumenty_FAYNA_' + slug + '.pdf');
 }
 var api = { docUmowa:docUmowa, docKwestionariusz:docKwestionariusz, docRODO:docRODO,
-            docZUS:docZUS, docUpowaznienie:docUpowaznienie, DOCS:DOCS, genAll:genAll };
+            docZUS:docZUS, docUpowaznienie:docUpowaznienie, DOCS:DOCS, buildCombined:buildCombined, genAll:genAll };
 if (typeof window!=='undefined') window.KADRY = api;
 if (typeof module!=='undefined' && module.exports) module.exports = api;
 })();
