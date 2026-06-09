@@ -30,6 +30,8 @@
   .q{padding:10px 0;border-bottom:1px dashed var(--line);}
   .q:last-child{border-bottom:none;}
   .q .qt{font-size:13.5px;margin-bottom:6px;}
+  .help{font-size:11.5px;color:#5b6b62;background:#f4f7f5;border-left:3px solid var(--gold);padding:6px 9px;border-radius:4px;margin:2px 0 6px;line-height:1.45;}
+  .terms{font-size:12px;color:#2c3a33;background:#f0f4f1;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:0 0 12px;line-height:1.6;}
   .yn{display:flex;gap:8px;}
   .yn label{display:flex;align-items:center;gap:5px;font-weight:500;border:1px solid var(--line);border-radius:8px;padding:6px 14px;cursor:pointer;font-size:13px;}
   .yn input{accent-color:var(--forest);}
@@ -107,48 +109,93 @@
 
   <!-- 2. STATUS ZUS -->
   <section class="sec">
-    <h2>2. Status ubezpieczeniowy (ZUS)</h2>
-    <p class="hint">Na tej podstawie ustalamy, jakie składki są obowiązkowe. Proszę odpowiedzieć na każde pytanie.</p>
+    <h2>2. Twoja sytuacja (składki ZUS)</h2>
+    <p class="hint">Te pytania ustalają, jakie składki ZUS odprowadzimy od Twojego wynagrodzenia — odpowiadasz tylko o sobie. Jeśli nigdzie indziej nie pracujesz i nie studiujesz, zwykle <b>wszędzie będzie NIE</b> (wtedy ta umowa jest Twoim jedynym tytułem i odprowadzimy pełne składki). W razie wątpliwości zaznacz NIE.</p>
     <div id="zus"></div>
     <div class="sub">Ubezpieczenia dobrowolne</div>
-    <label class="chk"><input type="checkbox" name="dobr_emer_rent"><span class="txt">Wnoszę o objęcie dobrowolnym ubezpieczeniem <b>emerytalnym i rentowym</b> z tytułu tej umowy.</span></label>
-    <label class="chk"><input type="checkbox" name="dobr_chor"><span class="txt">Wnoszę o objęcie dobrowolnym ubezpieczeniem <b>chorobowym</b> <span class="opt">(nie dotyczy studentów do 26 r.ż.)</span>.</span></label>
+    <label class="chk"><input type="checkbox" name="dobr_emer_rent"><span class="txt">Dobrowolne ubezpieczenie <b>emerytalne i rentowe</b> z tej umowy.</span></label>
+    <label class="chk"><input type="checkbox" name="dobr_chor"><span class="txt">Dobrowolne ubezpieczenie <b>chorobowe</b> <span class="opt">(nie dotyczy studentów do 26 r.ż.)</span>.</span></label>
+    <div class="help">Zwykle zostaw odznaczone. Dobrowolne chorobowe daje prawo do zasiłku w razie choroby, ale obniża wypłatę o dodatkową składkę — zaznacz tylko, jeśli świadomie tego chcesz. Te pola możesz spokojnie pominąć, jeśli nie wiesz.</div>
   </section>
 
   <!-- 3. PODATKI -->
   <section class="sec">
-    <h2>3. Oświadczenia podatkowe (PIT)</h2>
-    <p class="hint">Wpływają na wysokość zaliczki na podatek. W razie wątpliwości zostaw domyślne — biuro rachunkowe doprecyzuje.</p>
-    <label class="chk"><input type="checkbox" name="pit2"><span class="txt"><b>PIT-2</b> — wnoszę o stosowanie kwoty zmniejszającej zaliczkę na podatek u FAYNA DIGITAL.</span></label>
-    <div class="inline" style="margin:2px 0 8px 28px">
+    <h2>3. Podatki (PIT)</h2>
+    <p class="hint">To wpływa tylko na to, ile podatku potrącimy co miesiąc — nic tu nie jest ostateczne, nasza księgowość zweryfikuje. Jeśli czegoś nie wiesz, zostaw ustawienia domyślne.</p>
+    <label class="chk"><input type="checkbox" name="pit2"><span class="txt"><b>Kwota wolna od podatku (PIT-2)</b> — proszę stosować kwotę zmniejszającą podatek.</span></label>
+    <div class="help">Każdy ma część dochodu bez podatku (ok. 30 000 zł rocznie ≈ 300 zł/mies.). Zaznacz, jeśli to Twoja jedyna lub główna umowa — wtedy co miesiąc potrącimy mniej podatku, czyli dostaniesz więcej „na rękę" od razu (zamiast zwrotu raz w roku). Jeśli PIT-2 składasz też u innego pracodawcy — tutaj nie zaznaczaj.</div>
+    <div class="inline" style="margin:2px 0 4px 28px">
       <span class="opt">jeśli zaznaczono, w jakiej części:</span>
       <label><input type="radio" name="pit2_czesc" value="1/12">1/12</label>
       <label><input type="radio" name="pit2_czesc" value="1/24">1/24</label>
       <label><input type="radio" name="pit2_czesc" value="1/36">1/36</label>
     </div>
-    <label class="chk"><input type="checkbox" name="bez_zaliczki"><span class="txt">Wnoszę o <b>niepobieranie zaliczki</b> — przewiduję, że roczny dochód nie przekroczy kwoty wolnej (art. 41 ust. 1c ustawy o PIT).</span></label>
+    <div class="help" style="margin-left:28px">1/12 = u jednego płatnika (typowo) · 1/24 lub 1/36 = gdy dzielisz kwotę między 2–3 płatników. Nie wiesz? Wybierz 1/12.</div>
+    <label class="chk"><input type="checkbox" name="bez_zaliczki"><span class="txt"><b>Niepobieranie zaliczki</b> na podatek.</span></label>
+    <div class="help">Zaznacz tylko, jeśli w całym roku zarobisz bardzo mało (łącznie poniżej ~30 000 zł) — wtedy nie potrącamy podatku w ogóle. Jeśli to Twoja główna praca — zostaw puste.</div>
     <div class="sub">Koszty uzyskania przychodu</div>
     <div class="inline" style="margin-left:4px">
       <label><input type="radio" name="kup" value="20" checked>20% (standardowe)</label>
-      <label><input type="radio" name="kup" value="50">50% do części autorskiej (§ 7 umowy)</label>
+      <label><input type="radio" name="kup" value="50">50% (część twórcza)</label>
     </div>
+    <div class="help">Część wynagrodzenia, od której nie liczymy podatku. <b>Standardowo 20% — zostaw, jeśli nie masz pewności.</b> Wariant 50% dotyczy wyłącznie sytuacji, gdy w pracy tworzysz materiały twórcze (teksty, grafiki, projekty) i przekazujesz do nich prawa autorskie; daje większą ulgę, ale ma roczny limit — zwykle ustala to księgowość.</div>
     <div class="sub">Ulga dla młodych (do 26 r.ż.)</div>
     <div class="inline" style="margin-left:4px">
-      <label><input type="radio" name="ulga26" value="nie_dotyczy" checked>nie dotyczy (mam ≥ 26 lat)</label>
+      <label><input type="radio" name="ulga26" value="nie_dotyczy" checked>nie dotyczy</label>
       <label><input type="radio" name="ulga26" value="dotyczy">dotyczy</label>
-      <label><input type="checkbox" name="ulga26_niestosowac">wnoszę o niestosowanie ulgi</label>
+      <label><input type="checkbox" name="ulga26_niestosowac">proszę nie stosować ulgi</label>
     </div>
+    <div class="help">Osoby poniżej 26 lat nie płacą podatku PIT (do rocznego limitu). Ustawimy to automatycznie na podstawie Twojej daty urodzenia. „Proszę nie stosować" zaznacz tylko, jeśli świadomie chcesz, byśmy mimo to potrącali podatek.</div>
   </section>
 
-  <!-- 4. ZGODY I OŚWIADCZENIA -->
+  <!-- 4. WARUNKI UMOWY, ZGODY I OŚWIADCZENIA -->
   <section class="sec">
-    <h2>4. Zgody i oświadczenia <span class="pill">RODO</span></h2>
-    <p class="hint">Administrator danych: FAYNA DIGITAL sp. z o.o. Pełna klauzula art. 13 RODO w przygotowanych dokumentach.</p>
-    <label class="chk"><input type="checkbox" name="zgoda_rodo_info" required><span class="txt">Potwierdzam, że zapoznałem(-am) się z <b>klauzulą informacyjną RODO</b>. Przyjmuję do wiadomości, że dane niezbędne do umowy przetwarzane są na podstawie art. 6 ust. 1 lit. b i c RODO (zgoda nie jest wymagana). <span class="req">*</span></span></label>
-    <label class="chk"><input type="checkbox" name="akcept_warunki" required><span class="txt">Potwierdzam, że zapoznałem(-am) się z <b>warunkami umowy zlecenia</b> (wynagrodzenie: część stała 2 500 zł brutto/mies. + 120 zł brutto za każdą zakończoną sprzedaż; praca zdalna; poufność). <span class="req">*</span></span></label>
+    <h2>4. Co podpisujesz — warunki umowy <span class="pill">RODO</span></h2>
+    <p class="hint">Zanim cokolwiek zaznaczysz, przeczytaj poniższe wyjaśnienia. Napisaliśmy je prostym językiem, żebyś podpisywał(a) ze zrozumieniem — bez konieczności pytania prawnika. Nic tu nie jest „haczykiem”: to standardowe zasady pracy dla agencji obsługującej klientów.</p>
+
+    <div class="terms">
+      <b style="color:var(--forest)">Warunki w skrócie</b>
+      <ul style="margin:6px 0 0;padding-left:18px">
+        <li><b>Forma:</b> umowa zlecenia (nie etat), czas określony.</li>
+        <li><b>Gdzie pracujesz:</b> zdalnie, na własnym sprzęcie (komputer, internet). Firma daje dostęp do systemu CRM, telefonii internetowej i materiałów sprzedażowych.</li>
+        <li><b>Wynagrodzenie:</b> część stała <b>2 500 zł brutto / miesiąc</b> + <b>120 zł brutto za każdą zakończoną sprzedaż</b> (gdy klient podpisze umowę i zapłaci).</li>
+        <li><b>Wypłata:</b> do <b>10. dnia</b> następnego miesiąca, przelewem na Twój rachunek.</li>
+        <li><b>Zakończenie:</b> wypowiedzenie z <b>14-dniowym</b> okresem (z ważnych powodów — od razu).</li>
+      </ul>
+    </div>
+
+    <div class="sub">Wynagrodzenie i prowizja — jak to działa</div>
+    <div class="help">Co miesiąc dostajesz stałe 2 500 zł brutto, niezależnie od wyników. Do tego 120 zł brutto za każdą zakończoną sprzedaż. <b>Uwaga:</b> jeśli w ciągu <b>14 dni</b> klient zrezygnuje lub odzyska pieniądze (zwrot), prowizja za tę sprzedaż przepada — była przedwczesna, bo sprzedaż się nie utrzymała. Masz jednak <b>gwarancję</b>: Twoje łączne wynagrodzenie za każdą przepracowaną godzinę nigdy nie spadnie poniżej ustawowej minimalnej stawki godzinowej. Czyli żadne potrącenie prowizji nie zabierze Ci minimum za godziny, które realnie przepracowałeś(-aś).</div>
+
+    <div class="sub">Prawa autorskie — dlaczego to ważne</div>
+    <div class="help">Wszystko, co stworzysz w tej pracy (teksty, grafiki, posty, materiały) staje się własnością FAYNA DIGITAL — i jest to już zawarte w Twoim wynagrodzeniu (nie dopłacamy osobno). <b>Dlaczego?</b> Te materiały <b>przekazujemy dalej naszym klientom</b>, dla których pracujemy. Żeby firma mogła legalnie je wykorzystać i przekazać innej stronie, musi mieć do nich pełne prawa. To standard każdej pracy twórczej dla klientów — tak działa cała branża IT i marketingu. Nie tracisz nic, czego normalnie byś używał(a) — chodzi o materiały tworzone w ramach tej współpracy.</div>
+
+    <div class="sub">Poufność — i dlaczego to nie tylko „tajemnica firmy”</div>
+    <div class="help">Wszystko, co dotyczy klientów, jest tajemnicą i jest chronione — bezterminowo, także po zakończeniu współpracy. Ważne: dane klientów to <b>nie tylko tajemnica handlowa</b> firmy, lecz <b>bezpośrednio dane osobowe chronione przez RODO</b> — tak samo jak dane uczestników obozów i <b>dane o zdrowiu dzieci</b> (dane szczególnie wrażliwe). Tajemnicą jest też to, <b>z jakimi firmami współpracujemy</b> oraz <b>sam fakt</b> takiej współpracy — o tym również nie rozmawiamy z osobami trzecimi.</div>
+
+    <div class="sub">Odpowiedzialność i kara umowna — po co ona jest</div>
+    <div class="help">Za ochronę tych danych firma odpowiada <b>swoim majątkiem i pieniędzmi</b> — kary urzędowe za naruszenie RODO oraz odszkodowania bywają bardzo wysokie. Dlatego kategorycznie nie wolno ujawniać danych ani wynosić ich poza narzędzia firmy. W umowie jest <b>zabezpieczenie: kara umowna 10 000 zł</b> za każde naruszenie poufności. To <b>nie pułapka</b> — to mechanizm, który chroni klientów, firmę i Ciebie. Jeśli przestrzegasz zasad (pracujesz tylko w udostępnionych narzędziach, nie kopiujesz i nie przekazujesz danych) — <b>nic Ci nie grozi</b>.</div>
+
+    <div class="sub">Zakaz „podbierania” klientów (12 miesięcy)</div>
+    <div class="help">W trakcie współpracy oraz przez <b>12 miesięcy po jej zakończeniu</b> nie wolno pozyskiwać klientów firmy ani podmiotów współpracujących na własny rachunek lub dla konkurencji, ani korzystać z bazy klientów poznanej dzięki tej pracy. To chroni relacje, które firma budowała latami.</div>
+
+    <div class="sub">Jak kończy się umowa</div>
+    <div class="help">Każda ze stron może wypowiedzieć umowę z <b>14-dniowym</b> okresem wypowiedzenia (lub natychmiast — z ważnych powodów). Za pracę wykonaną do dnia zakończenia należy Ci się pełne wynagrodzenie.</div>
+
+    <div class="sub">Jak podpisać dokumenty</div>
+    <div class="help">Komplet dokumentów podpisuje się <b>Profilem Zaufanym</b> (bezpłatny podpis elektroniczny przez login.gov.pl / bankowość internetową). Po wypełnieniu formularza pobierzesz 5 plików PDF — sprawdź je, podpisz Profilem Zaufanym i odeślij.</div>
+
+    <div class="sub" style="margin-top:14px">Oświadczenia</div>
+    <label class="chk"><input type="checkbox" name="zgoda_rodo_info" required><span class="txt">Potwierdzam, że <b>zapoznałem(-am) się z klauzulą informacyjną RODO</b> — wiem, kto i po co przetwarza moje dane oraz jakie mam prawa. <span class="req">*</span></span></label>
+    <div class="help">Wymagane. To tylko potwierdzenie, że przeczytałeś(-aś) informację o tym, jak firma obchodzi się z Twoimi danymi. Dane niezbędne do umowy przetwarzamy na podstawie przepisów (art. 6 ust. 1 lit. b i c RODO) — Twoja zgoda nie jest tu wymagana, bo bez tych danych nie da się zawrzeć umowy.</div>
+    <label class="chk"><input type="checkbox" name="akcept_warunki" required><span class="txt">Potwierdzam, że <b>zapoznałem(-am) się z warunkami umowy zlecenia</b> opisanymi powyżej i je akceptuję (wynagrodzenie 2 500 zł + 120 zł/sprzedaż, praca zdalna, poufność, prawa autorskie, wypowiedzenie 14 dni). <span class="req">*</span></span></label>
+    <div class="help">Wymagane. Zaznaczając, potwierdzasz, że rozumiesz powyższe wyjaśnienia i zgadzasz się na te warunki. Jeśli coś jest niejasne — zapytaj nas <b>przed</b> zaznaczeniem.</div>
+
     <div class="sub">Zgody dobrowolne <span class="opt">(brak nie wpływa na zawarcie umowy)</span></div>
     <label class="chk"><input type="checkbox" name="zgoda_marketing"><span class="txt">Wyrażam zgodę na przetwarzanie danych w celach <b>marketingowych</b> (art. 6 ust. 1 lit. a RODO).</span></label>
+    <div class="help">Możesz tego <b>nie zaznaczać</b> — nie wpływa to na zawarcie ani ważność umowy. Dotyczy tylko informowania Cię o nowych ofertach/współpracy. Zgodę możesz wycofać w każdej chwili.</div>
     <label class="chk"><input type="checkbox" name="zgoda_wizerunek"><span class="txt">Wyrażam zgodę na utrwalanie i wykorzystanie mojego <b>wizerunku</b> (zdjęcia/nagrania zespołowe) do celów wewnętrznych i promocyjnych.</span></label>
+    <div class="help">Również <b>dobrowolne</b> — możesz nie zaznaczać. Dotyczy np. zdjęć zespołowych. Brak zgody nie ma żadnego wpływu na współpracę; zgodę można wycofać.</div>
   </section>
 
   <div class="err" id="err">Proszę uzupełnić wymagane pola (oznaczone *).</div>
@@ -172,22 +219,23 @@ const ENDPOINT = ""; // np. "https://campscout.pl/.netlify/functions/submit-kadr
 
 // 9 pytań statusu ZUS (Sekcja B oświadczenia)
 const ZUS = [
- ["zus1","Jestem zatrudniony(-a) u innego pracodawcy z wynagrodzeniem co najmniej minimalnym"],
- ["zus2","Wykonuję inną umowę zlecenia objętą obowiązkowym ZUS"],
- ["zus3","Prowadzę działalność gospodarczą objętą obowiązkowym ZUS"],
- ["zus4","Jestem emerytem(-ką)"],
- ["zus5","Jestem rencistą(-ką)"],
- ["zus6","Jestem studentem/uczniem i nie ukończyłem(-am) 26 lat"],
- ["zus7","Jestem zarejestrowany(-a) jako bezrobotny(-a)"],
- ["zus8","Przebywam na urlopie macierzyńskim/wychowawczym lub mam świadczenie przedemerytalne"],
- ["zus9","Podlegam ubezpieczeniu w KRUS"],
+ ["zus1","Pracujesz już gdzie indziej na etacie (umowa o pracę) z pensją co najmniej minimalną?","Stała praca u innego pracodawcy. Jeśli TAK — od tej umowy nie pobieramy składek emerytalno-rentowych (tylko zdrowotną). Nie masz innego etatu → zaznacz NIE."],
+ ["zus2","Masz inną umowę zlecenie, od której odprowadzane są składki ZUS?","Inne zlecenie, od którego ktoś już płaci za Ciebie ZUS. Nie masz → NIE."],
+ ["zus3","Prowadzisz własną firmę (działalność gospodarczą) ze składkami ZUS?","Zarejestrowana działalność, od której płacisz ZUS. Nie masz → NIE."],
+ ["zus4","Pobierasz emeryturę?","Jeśli nie jesteś emerytem → NIE."],
+ ["zus5","Pobierasz rentę?","Jeśli nie pobierasz renty → NIE."],
+ ["zus6","Uczysz się lub studiujesz i masz mniej niż 26 lat?","Jeśli TAK — od umowy zlecenia nie płaci się ZUS ani składki zdrowotnej (więcej „na rękę”). Potrzebna ważna legitymacja studencka/uczniowska."],
+ ["zus7","Jesteś zarejestrowany w urzędzie pracy jako bezrobotny?","Uwaga: rozpoczęcie zlecenia zwykle trzeba zgłosić w urzędzie pracy."],
+ ["zus8","Jesteś na urlopie macierzyńskim/wychowawczym lub masz świadczenie przedemerytalne?","Jeśli żadne z tych → NIE."],
+ ["zus9","Jesteś ubezpieczony w KRUS (ubezpieczenie rolnicze)?","Dotyczy rolników. Jeśli nie → NIE."],
 ];
 const zusBox=document.getElementById('zus');
-ZUS.forEach(([n,t])=>{
+ZUS.forEach(([n,t,help])=>{
   const d=document.createElement('div');d.className='q';
   d.innerHTML=`<div class="qt">${t}</div><div class="yn">
     <label><input type="radio" name="${n}" value="TAK" required>TAK</label>
-    <label><input type="radio" name="${n}" value="NIE">NIE</label></div>`;
+    <label><input type="radio" name="${n}" value="NIE">NIE</label></div>
+    <div class="help">${help}</div>`;
   zusBox.appendChild(d);
 });
 
@@ -209,7 +257,23 @@ function download(o){
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
   a.download='odpowiedzi_'+(o.fullname||'kandydat').replace(/\s+/g,'_')+'.json';a.click();
 }
-function buildA(){ const o=collect(); delete o.meta; return o; }
+function buildA(){
+  const o=collect(); delete o.meta;
+  // auto-ulga26 z daty urodzenia: <26 lat → 'dotyczy', inaczej 'nie_dotyczy'
+  if(o.data_urodzenia){
+    const d=new Date(o.data_urodzenia);
+    if(!isNaN(d)){
+      const now=new Date();
+      let age=now.getFullYear()-d.getFullYear();
+      const m=now.getMonth()-d.getMonth();
+      if(m<0||(m===0&&now.getDate()<d.getDate())) age--;
+      o.ulga26 = (age<26) ? 'dotyczy' : 'nie_dotyczy';
+    }
+  }
+  // jeśli PIT-2 zaznaczone, a część niewybrana → domyślnie 1/12
+  if((o.pit2===true||o.pit2==='on') && !o.pit2_czesc) o.pit2_czesc='1/12';
+  return o;
+}
 async function generate(){
   const A=buildA();
   if(!window.KADRY||!window.pdfMake){ alert('Generator dokumentów nie załadował się. Odśwież stronę.'); return false; }
@@ -228,11 +292,6 @@ document.getElementById('kform').addEventListener('submit',async e=>{
     document.getElementById('done').style.display='block';
     document.getElementById('done').scrollIntoView({behavior:'smooth'});
   }
-})
-  if(ENDPOINT){
-    try{ await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}); }
-    catch(_){ download(data); }
-  } else { download(data); }
 });
 </script>
 </body>
