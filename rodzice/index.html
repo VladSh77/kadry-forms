@@ -50,7 +50,6 @@
     <div class="grid">
       <div><label>Imię i nazwisko dziecka *</label><input type="text" name="dziecko" required></div>
       <div><label>Data urodzenia dziecka *</label><input type="text" name="dziecko_ur" placeholder="DD.MM.RRRR" required></div>
-      <div><label>Turnus / termin obozu *</label><input type="text" name="turnus" placeholder="np. 08–21.07.2026" required></div>
       <div><label>Imię i nazwisko rodzica/opiekuna *</label><input type="text" name="rodzic" required></div>
       <div><label>Telefon *</label><input type="tel" name="tel" required></div>
       <div><label>E-mail</label><input type="email" name="email"></div>
@@ -124,10 +123,10 @@ document.getElementById('f').addEventListener('submit', (e) => {
   e.preventDefault();
   const err = document.getElementById('err');
   const fd = new FormData(e.target);
-  const dziecko = fd.get('dziecko'), dziecko_ur = fd.get('dziecko_ur'), turnus = fd.get('turnus'), rodzic = fd.get('rodzic'), tel = fd.get('tel'), email = fd.get('email') || '';
+  const dziecko = fd.get('dziecko'), dziecko_ur = fd.get('dziecko_ur'), rodzic = fd.get('rodzic'), tel = fd.get('tel'), email = fd.get('email') || '';
   const wizerunek = fd.get('wizerunek');
   const marketing = fd.get('marketing') === 'on';
-  if (!dziecko || !dziecko_ur || !turnus || !rodzic || !tel || !wizerunek || !hasSignature) {
+  if (!dziecko || !dziecko_ur || !rodzic || !tel || !wizerunek || !hasSignature) {
     err.style.display = 'block'; return;
   }
   err.style.display = 'none';
@@ -145,7 +144,6 @@ document.getElementById('f').addEventListener('submit', (e) => {
       { text: 'ZGODY RODZICA / OPIEKUNA', fontSize: 15, bold: true, color: '#1B4332', margin: [0, 0, 0, 2] },
       { text: 'Dodatek nr 4a i 4b do Umowy o świadczenie usług turystycznych', fontSize: 9, color: '#C08A2D', bold: true, margin: [0, 0, 0, 12] },
       { text: [{ text: 'Dziecko: ', bold: true }, dziecko, '   ', { text: 'Data urodzenia: ', bold: true }, dziecko_ur], margin: [0, 2, 0, 0] },
-      { text: [{ text: 'Turnus: ', bold: true }, turnus], margin: [0, 2, 0, 0] },
       { text: [{ text: 'Rodzic/opiekun: ', bold: true }, rodzic], margin: [0, 2, 0, 0] },
       { text: [{ text: 'Telefon: ', bold: true }, tel, '   ', { text: 'E-mail: ', bold: true }, email || '—'], margin: [0, 2, 0, 0] },
       { text: [{ text: 'Data i godzina złożenia: ', bold: true }, dateStr], margin: [0, 2, 0, 12] },
