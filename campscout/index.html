@@ -241,17 +241,16 @@
 
   <div id="done">
     <h3>Дякуємо! ✅</h3>
-    <p style="font-size:13px;margin:4px 0" id="donemsg">Документи згенеровано та завантажено на ваш пристрій. Копію надіслано організатору. Підпишіть Profilem Zaufanym / власноруч і надішліть назад.</p>
+    <p style="font-size:13px;margin:4px 0" id="donemsg">Документи згенеровано та завантажено на ваш пристрій. Копія разом з даними анкети вже передана організатору (з датою/часом подання) — нічого додатково пересилати не потрібно. Підпис документів відбудеться особисто при зустрічі з організатором.</p>
   </div>
 </form>
 
 <div class="consent-overlay" id="consentOverlay">
   <div class="consent-box">
-    <h3>Погодьте передачу даних</h3>
-    <p>Щоб ми отримали ваші документи одразу (не чекаючи, поки ви їх надішлете самі), заповнена анкета та згенеровані PDF будуть передані на сервер CampScout. Разом з ними фіксуються дата/час подання та IP-адреса — як підтвердження, що заявку подали саме ви, на випадок спірної ситуації.</p>
+    <h3>Підтвердіть подання</h3>
+    <p>Заповнена анкета та згенеровані PDF будуть передані на сервер CampScout разом з датою, годиною подання та IP-адресою — як підтвердження, що заявку подали саме ви. Це обов'язкова умова подання анкети (без цього кроку документи вважаються неподаними).</p>
     <div class="row">
       <button type="button" class="primary" id="consentAccept">Погоджуюсь і надсилаю</button>
-      <button type="button" class="ghost" id="consentDecline">Лише завантажити (без надсилання)</button>
     </div>
   </div>
 </div>
@@ -439,14 +438,6 @@ document.getElementById('consentAccept').addEventListener('click', ()=>{
   const pdfDoc = pdfMake.createPdf(window.KADRY.docDefAll(p.A_PL, p.A_UA));
   pdfDoc.download(filename);
   pdfDoc.getBase64(base64 => postToServer(p.fd, p.docNr, filename, base64));
-  pendingSubmit = null;
-  finishSubmit();
-});
-
-document.getElementById('consentDecline').addEventListener('click', ()=>{
-  const p = pendingSubmit; if(!p) return;
-  document.getElementById('consentOverlay').style.display = 'none';
-  window.KADRY.genALL(p.A_PL, p.A_UA); // лише локальне завантаження, без відправки на сервер
   pendingSubmit = null;
   finishSubmit();
 });

@@ -118,17 +118,16 @@
 
   <div id="done">
     <h3 style="color:var(--forest);margin:0 0 6px">Dziękujemy! ✅</h3>
-    <p style="font-size:13px;margin:0" id="donemsg">PDF został pobrany na Twoje urządzenie. Prześlij go, proszę, do organizatora.</p>
+    <p style="font-size:13px;margin:0" id="donemsg">PDF został pobrany na Twoje urządzenie. Formularz i podpisany PDF zostały też przesłane na serwer CampScout (z datą, godziną i adresem IP zgłoszenia) — nie musisz nic więcej przesyłać.</p>
   </div>
 </form>
 
 <div class="consent-overlay" id="consentOverlay">
   <div class="consent-box">
     <h3>Potwierdź wysyłkę</h3>
-    <p>Wypełniony formularz i podpisany PDF zostaną przesłane na serwer CampScout — razem z datą, godziną i adresem IP zgłoszenia jako dowód złożenia zgody na wypadek sporu. Możesz zamiast tego tylko pobrać PDF na swoje urządzenie, bez wysyłki.</p>
+    <p>Wypełniony formularz i podpisany PDF zostaną przesłane na serwer CampScout — razem z datą, godziną i adresem IP zgłoszenia jako dowód złożenia zgody na wypadek sporu. To wymagany krok złożenia formularza (bez niego zgoda nie jest uznawana za złożoną).</p>
     <div class="row">
       <button type="button" class="primary" id="consentAccept">Zgadzam się i wysyłam</button>
-      <button type="button" class="ghost" id="consentDecline">Tylko pobierz (bez wysyłki)</button>
     </div>
   </div>
 </div>
@@ -191,15 +190,6 @@ document.getElementById('consentAccept').addEventListener('click', () => {
   const pdfDoc = pdfMake.createPdf(p.docDef);
   pdfDoc.download(p.filename);
   pdfDoc.getBase64(base64 => postToServer(p.payload, p.docNr, p.filename, base64));
-  pendingSubmit = null;
-  document.getElementById('done').style.display = 'block';
-  document.getElementById('done').scrollIntoView({ behavior: 'smooth' });
-});
-
-document.getElementById('consentDecline').addEventListener('click', () => {
-  const p = pendingSubmit; if (!p) return;
-  document.getElementById('consentOverlay').style.display = 'none';
-  pdfMake.createPdf(p.docDef).download(p.filename); // тільки локальне завантаження, без відправки на сервер
   pendingSubmit = null;
   document.getElementById('done').style.display = 'block';
   document.getElementById('done').scrollIntoView({ behavior: 'smooth' });
