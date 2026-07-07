@@ -37,6 +37,14 @@
   button.ghost{background:var(--card);color:var(--forest);border:1.5px solid var(--forest);}
   .err{color:#b3261e;font-size:12px;margin-top:6px;display:none;}
   #done{display:none;background:rgba(27,67,50,.08);border:1px solid var(--forest);border-radius:12px;padding:18px;margin-top:16px;}
+  .consent-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;align-items:flex-end;justify-content:center;padding:0;}
+  @media(min-width:640px){.consent-overlay{align-items:center;padding:16px;}}
+  .consent-box{background:var(--card);color:var(--ink);border-radius:14px 14px 0 0;max-width:520px;width:100%;padding:20px 20px 18px;box-shadow:0 -4px 24px rgba(0,0,0,.25);}
+  @media(min-width:640px){.consent-box{border-radius:14px;}}
+  .consent-box h3{margin:0 0 8px;font-size:15px;color:var(--forest);}
+  .consent-box p{font-size:12.5px;line-height:1.5;margin:0 0 14px;color:var(--muted);}
+  .consent-box .row{display:flex;gap:10px;flex-wrap:wrap;}
+  .consent-box button{flex:1;min-width:140px;font-size:13.5px;padding:11px 14px;}
 </style>
 <script src="../campscout/assets/pdfmake.min.js"></script>
 <script src="../campscout/assets/vfs_fonts.js"></script>
@@ -62,7 +70,7 @@
       <li><b>Twoje prawa:</b> dostępu do danych, sprostowania, usunięcia, ograniczenia przetwarzania, sprzeciwu oraz wycofania zgody w dowolnym momencie (bez wpływu na zgodność z prawem przetwarzania dokonanego przed jej wycofaniem). Przysługuje Ci również prawo wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych (PUODO).</li>
       <li><b>Brak profilowania:</b> dane nie są wykorzystywane do zautomatyzowanego podejmowania decyzji ani profilowania.</li>
       <li><b>Dobrowolność:</b> podanie danych i wyrażenie obu zgód jest całkowicie dobrowolne. Odmowa zgody na wizerunek (4a) NIE wpływa na udział dziecka w turnusie. Brak zgody marketingowej (4b) nie niesie żadnych konsekwencji.</li>
-      <li><b>Sposób rejestracji zgody:</b> formularz działa lokalnie w Twojej przeglądarce (bez przesyłania danych na serwer) — dowodem złożenia zgody jest Twój odręczny podpis elektroniczny wraz z datą i godziną, zapisane w generowanym pliku PDF. Ze względu na brak komunikacji z serwerem adres IP nie jest rejestrowany.</li>
+      <li><b>Sposób rejestracji zgody:</b> po kliknięciu „Zgadzam się i wysyłam" wypełniony formularz oraz wygenerowany PDF z Twoim podpisem są przesyłane na serwer CampScout. Wraz z nimi zapisywana jest data, godzina i adres IP zgłoszenia — jako dowód złożenia zgody na wypadek sporu. Możesz zamiast tego wybrać opcję „Tylko pobierz (bez wysyłki)" — wtedy PDF zostaje wyłącznie na Twoim urządzeniu, a dane nie są przesyłane ani rejestrowane.</li>
     </ol>
   </section>
 
@@ -110,9 +118,20 @@
 
   <div id="done">
     <h3 style="color:var(--forest);margin:0 0 6px">Dziękujemy! ✅</h3>
-    <p style="font-size:13px;margin:0">PDF został pobrany na Twoje urządzenie. Prześlij go, proszę, do organizatora.</p>
+    <p style="font-size:13px;margin:0" id="donemsg">PDF został pobrany na Twoje urządzenie. Prześlij go, proszę, do organizatora.</p>
   </div>
 </form>
+
+<div class="consent-overlay" id="consentOverlay">
+  <div class="consent-box">
+    <h3>Potwierdź wysyłkę</h3>
+    <p>Wypełniony formularz i podpisany PDF zostaną przesłane na serwer CampScout — razem z datą, godziną i adresem IP zgłoszenia jako dowód złożenia zgody na wypadek sporu. Możesz zamiast tego tylko pobrać PDF na swoje urządzenie, bez wysyłki.</p>
+    <div class="row">
+      <button type="button" class="primary" id="consentAccept">Zgadzam się i wysyłam</button>
+      <button type="button" class="ghost" id="consentDecline">Tylko pobierz (bez wysyłki)</button>
+    </div>
+  </div>
+</div>
 </main>
 <script>
 const canvas = document.getElementById('sig');
@@ -142,6 +161,50 @@ if (typeof pdfMake !== 'undefined') {
   pdfMake.fonts = { Roboto: { normal:'Roboto-Regular.ttf', bold:'Roboto-Medium.ttf', italics:'Roboto-Italic.ttf', bolditalics:'Roboto-MediumItalic.ttf' } };
 }
 
+const SUBMIT_ENDPOINT = 'https://staging.campscout.eu/camp/submit-document';
+
+async function postToServer(payload, docNr, filename, base64){
+  try{
+    await fetch(SUBMIT_ENDPOINT, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        doc_type: 'rodzic',
+        full_name: payload.rodzic,
+        contact: payload.tel || payload.email || '',
+        doc_number: docNr,
+        raw_payload: payload,
+        pdf_base64: base64,
+        pdf_filename: filename,
+      }),
+    });
+  }catch(e){
+    console.warn('submit-document: serwer niedostępny, PDF pozostał lokalnie', e);
+  }
+}
+
+let pendingSubmit = null; // {docDef, payload, docNr, filename} — czeka na decyzję w popupie zgody
+
+document.getElementById('consentAccept').addEventListener('click', () => {
+  const p = pendingSubmit; if (!p) return;
+  document.getElementById('consentOverlay').style.display = 'none';
+  const pdfDoc = pdfMake.createPdf(p.docDef);
+  pdfDoc.download(p.filename);
+  pdfDoc.getBase64(base64 => postToServer(p.payload, p.docNr, p.filename, base64));
+  pendingSubmit = null;
+  document.getElementById('done').style.display = 'block';
+  document.getElementById('done').scrollIntoView({ behavior: 'smooth' });
+});
+
+document.getElementById('consentDecline').addEventListener('click', () => {
+  const p = pendingSubmit; if (!p) return;
+  document.getElementById('consentOverlay').style.display = 'none';
+  pdfMake.createPdf(p.docDef).download(p.filename); // тільки локальне завантаження, без відправки на сервер
+  pendingSubmit = null;
+  document.getElementById('done').style.display = 'block';
+  document.getElementById('done').scrollIntoView({ behavior: 'smooth' });
+});
+
 document.getElementById('f').addEventListener('submit', (e) => {
   e.preventDefault();
   const err = document.getElementById('err');
@@ -157,6 +220,8 @@ document.getElementById('f').addEventListener('submit', (e) => {
   const sigDataUrl = canvas.toDataURL('image/png');
   const now = new Date();
   const dateStr = now.toLocaleDateString('pl-PL') + ' ' + now.toLocaleTimeString('pl-PL');
+  const docNr = now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0')
+    + '-' + String(now.getHours()).padStart(2,'0') + String(now.getMinutes()).padStart(2,'0') + String(now.getSeconds()).padStart(2,'0');
 
   const docDef = {
     pageSize: 'A4', pageMargins: [40, 44, 40, 40],
@@ -187,9 +252,12 @@ document.getElementById('f').addEventListener('submit', (e) => {
     ],
   };
 
-  pdfMake.createPdf(docDef).download('zgody_rodzica_' + dziecko.replace(/\s+/g, '_') + '.pdf');
-  document.getElementById('done').style.display = 'block';
-  document.getElementById('done').scrollIntoView({ behavior: 'smooth' });
+  pendingSubmit = {
+    docDef, docNr,
+    filename: 'zgody_rodzica_' + dziecko.replace(/\s+/g, '_') + '.pdf',
+    payload: { dziecko, dziecko_ur, rodzic, tel, email, wizerunek, marketing, opiekunPrawny, dateStr },
+  };
+  document.getElementById('consentOverlay').style.display = 'flex';
 });
 window.addEventListener('resize', () => { const data = canvas.toDataURL(); resizeCanvas(); });
 </script>

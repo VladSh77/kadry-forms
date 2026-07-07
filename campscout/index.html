@@ -45,6 +45,14 @@
   button.ghost{background:var(--card);color:var(--forest);border:1.5px solid var(--forest);}
   button:disabled{opacity:.5;cursor:not-allowed;}
   .err{color:#b3261e;font-size:12px;margin-top:4px;display:none;}
+  .consent-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;align-items:flex-end;justify-content:center;padding:0;}
+  @media(min-width:640px){.consent-overlay{align-items:center;padding:16px;}}
+  .consent-box{background:var(--card);color:var(--ink);border-radius:14px 14px 0 0;max-width:520px;width:100%;padding:20px 20px 18px;box-shadow:0 -4px 24px rgba(0,0,0,.25);}
+  @media(min-width:640px){.consent-box{border-radius:14px;}}
+  .consent-box h3{margin:0 0 8px;font-size:15px;color:var(--forest);}
+  .consent-box p{font-size:12.5px;line-height:1.5;margin:0 0 14px;color:var(--muted);}
+  .consent-box .row{display:flex;gap:10px;flex-wrap:wrap;}
+  .consent-box button{flex:1;min-width:140px;font-size:13.5px;padding:11px 14px;}
   #done{display:none;background:rgba(27,67,50,.08);border:1px solid var(--forest);border-radius:12px;padding:18px;margin-top:16px;}
   #done h3{color:var(--forest);margin:0 0 6px;}
   textarea#out{width:100%;height:180px;font-family:ui-monospace,Menlo,monospace;font-size:11px;margin-top:8px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px}
@@ -236,6 +244,17 @@
     <p style="font-size:13px;margin:4px 0" id="donemsg">Документи згенеровано та завантажено на ваш пристрій. Копію надіслано організатору. Підпишіть Profilem Zaufanym / власноруч і надішліть назад.</p>
   </div>
 </form>
+
+<div class="consent-overlay" id="consentOverlay">
+  <div class="consent-box">
+    <h3>Погодьте передачу даних</h3>
+    <p>Щоб ми отримали ваші документи одразу (не чекаючи, поки ви їх надішлете самі), заповнена анкета та згенеровані PDF будуть передані на сервер CampScout. Разом з ними фіксуються дата/час подання та IP-адреса — як підтвердження, що заявку подали саме ви, на випадок спірної ситуації.</p>
+    <div class="row">
+      <button type="button" class="primary" id="consentAccept">Погоджуюсь і надсилаю</button>
+      <button type="button" class="ghost" id="consentDecline">Лише завантажити (без надсилання)</button>
+    </div>
+  </div>
+</div>
 </main>
 <script>
 // === Транслітерація укр→лат (КМУ 55/2010, спрощена таблиця з ТЗ) ===
@@ -373,14 +392,70 @@ function customErrors(fd){
   return errs;
 }
 
+const SUBMIT_ENDPOINT = 'https://staging.campscout.eu/camp/submit-document';
+
+// Надсилає base64 PDF+анкету на сервер — фіксація IP/час подання як доказ
+// (INC-216). Best-effort: якщо сервер недоступний, кандидат все одно вже
+// отримав локально завантажений PDF — try/catch не блокує основний потік.
+async function postToServer(fd, docNr, filename, base64){
+  try{
+    const fullname = [fd.prizvyshche_ua, fd.imia_ua, fd.po_batkovi].filter(Boolean).join(' ')
+      || [fd.nazwisko_lat, fd.imie_lat].filter(Boolean).join(' ');
+    await fetch(SUBMIT_ENDPOINT, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        doc_type: 'wychowawca',
+        full_name: fullname,
+        contact: fd.tel || fd.email || '',
+        doc_number: docNr,
+        raw_payload: fd,
+        pdf_base64: base64,
+        pdf_filename: filename,
+      }),
+    });
+  }catch(e){
+    console.warn('submit-document: сервер недоступний, PDF лишився локально', e);
+  }
+}
+
+let pendingSubmit = null; // {A_PL, A_UA, fd, docNr} — очікує рішення в попапі згоди
+
 async function sendDocs(fd){
   const docNr = genDocNumber(); // один номер (дата+час подання) на обидва пакети цього кандидата
   const A_PL = buildA_PL(fd, docNr);
   const A_UA = buildA_UA(fd, docNr);
+  pendingSubmit = {A_PL, A_UA, fd, docNr};
+  document.getElementById('consentOverlay').style.display = 'flex';
+}
+
+document.getElementById('consentAccept').addEventListener('click', ()=>{
+  const p = pendingSubmit; if(!p) return;
+  document.getElementById('consentOverlay').style.display = 'none';
+  const filename = 'dokumenty_kadra_' + (p.fd.prizvyshche_ua||p.fd.nazwisko_lat||'kadra').replace(/\s+/g,'_') + '.pdf';
   // ОДИН PDF з усіма документами (браузери блокують 2-й+ .download() поспіль —
-  // та сама проблема, що вже була виправлена у формі Данієля).
-  window.KADRY.genALL(A_PL, A_UA);
-  return 'download_only';
+  // та сама проблема, що вже була виправлена у формі Данієля). createPdf
+  // викликаємо ОДИН раз — і .download(), і .getBase64() працюють з того самого об'єкта.
+  const pdfDoc = pdfMake.createPdf(window.KADRY.docDefAll(p.A_PL, p.A_UA));
+  pdfDoc.download(filename);
+  pdfDoc.getBase64(base64 => postToServer(p.fd, p.docNr, filename, base64));
+  pendingSubmit = null;
+  finishSubmit();
+});
+
+document.getElementById('consentDecline').addEventListener('click', ()=>{
+  const p = pendingSubmit; if(!p) return;
+  document.getElementById('consentOverlay').style.display = 'none';
+  window.KADRY.genALL(p.A_PL, p.A_UA); // лише локальне завантаження, без відправки на сервер
+  pendingSubmit = null;
+  finishSubmit();
+});
+
+function finishSubmit(){
+  const btn = document.getElementById('send');
+  document.getElementById('done').style.display='block';
+  document.getElementById('done').scrollIntoView({behavior:'smooth'});
+  btn.disabled=false; btn.textContent='Надішли документи';
 }
 
 document.getElementById('f').addEventListener('submit', async e=>{
@@ -393,9 +468,6 @@ document.getElementById('f').addEventListener('submit', async e=>{
   if(!window.KADRY||!window.pdfMake){ alert('Генератор документів не завантажився. Оновіть сторінку.'); return; }
   err.style.display='none'; btn.disabled=true; btn.textContent='Генерування…';
   await sendDocs(fd);
-  document.getElementById('done').style.display='block';
-  document.getElementById('done').scrollIntoView({behavior:'smooth'});
-  btn.disabled=false; btn.textContent='Надішли документи';
 });
 
 </script>
