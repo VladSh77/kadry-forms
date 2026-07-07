@@ -11,9 +11,14 @@
   body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;line-height:1.5;}
   header{background:var(--forest);color:#fff;padding:22px 18px;border-bottom:4px solid var(--gold);}
   header .co{font-weight:800;font-size:19px;}
+  header .admin{font-size:11.5px;opacity:.85;margin-top:4px;}
   header h1{font-size:16px;margin:10px 0 0;font-weight:600;}
   header p{font-size:12.5px;opacity:.92;margin:6px 0 0;}
   main{max-width:720px;margin:0 auto;padding:18px 16px 60px;}
+  .klauzula{font-size:12.5px;}
+  .klauzula ol{margin:6px 0 0;padding-left:20px;}
+  .klauzula li{margin:0 0 8px;}
+  .req-note{font-size:11.5px;color:var(--muted);margin:2px 0 0;}
   .sec{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:16px 0;box-shadow:0 1px 3px rgba(0,0,0,.04);}
   .sec h2{color:var(--gold);font-size:15px;margin:0 0 10px;border-bottom:2px solid var(--gold);padding-bottom:6px;}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px;}
@@ -39,25 +44,43 @@
 <body>
 <header>
   <div class="co">CAMP SCOUT</div>
+  <div class="admin">Administrator danych osobowych: CAMPSCOUT — Volodymyr Shevchenko · ul. Kaliska 45, 63-400 Ostrów Wielkopolski · NIP 6222847059</div>
   <h1>Zgody rodzica / opiekuna — Dodatek nr 4a i 4b</h1>
   <p>Wypełnij, podpisz elektronicznie i pobierz PDF. Zajmie 2 minuty.</p>
 </header>
 <main>
 <form id="f" novalidate>
 
+  <section class="sec klauzula">
+    <h2>Klauzula informacyjna RODO</h2>
+    <p style="margin:0 0 6px">Zanim wyrazisz zgody poniżej, prosimy o zapoznanie się z poniższymi informacjami (art. 13 RODO):</p>
+    <ol>
+      <li><b>Administrator danych:</b> CAMPSCOUT — Volodymyr Shevchenko, ul. Kaliska 45, 63-400 Ostrów Wielkopolski, NIP 6222847059. Kontakt w sprawie danych — adres e-mail lub panel klienta wskazany przy zapisie na turnus.</li>
+      <li><b>Cel i podstawa prawna przetwarzania:</b> (a) rozpowszechnianie wizerunku dziecka w celach promocyjnych CampScout — na podstawie Twojej dobrowolnej zgody (art. 6 ust. 1 lit. a RODO, Dodatek 4a); (b) komunikacja marketingowa drogą elektroniczną — na podstawie odrębnej dobrowolnej zgody (art. 6 ust. 1 lit. a RODO, Dodatek 4b).</li>
+      <li><b>Odbiorcy danych:</b> wyłącznie w zakresie zgody 4a — publiczne platformy, na których CampScout prowadzi promocję (strona internetowa, Instagram, Facebook, Telegram) oraz dostawcy usług IT/hostingu działający na zlecenie administratora.</li>
+      <li><b>Okres przechowywania:</b> do czasu wycofania zgody lub zakończenia danej kampanii promocyjnej/komunikacji marketingowej — nie dłużej niż przez okres niezbędny do obrony przed ewentualnymi roszczeniami.</li>
+      <li><b>Twoje prawa:</b> dostępu do danych, sprostowania, usunięcia, ograniczenia przetwarzania, sprzeciwu oraz wycofania zgody w dowolnym momencie (bez wpływu na zgodność z prawem przetwarzania dokonanego przed jej wycofaniem). Przysługuje Ci również prawo wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych (PUODO).</li>
+      <li><b>Brak profilowania:</b> dane nie są wykorzystywane do zautomatyzowanego podejmowania decyzji ani profilowania.</li>
+      <li><b>Dobrowolność:</b> podanie danych i wyrażenie obu zgód jest całkowicie dobrowolne. Odmowa zgody na wizerunek (4a) NIE wpływa na udział dziecka w turnusie. Brak zgody marketingowej (4b) nie niesie żadnych konsekwencji.</li>
+      <li><b>Sposób rejestracji zgody:</b> formularz działa lokalnie w Twojej przeglądarce (bez przesyłania danych na serwer) — dowodem złożenia zgody jest Twój odręczny podpis elektroniczny wraz z datą i godziną, zapisane w generowanym pliku PDF. Ze względu na brak komunikacji z serwerem adres IP nie jest rejestrowany.</li>
+    </ol>
+  </section>
+
   <section class="sec">
     <h2>Dane</h2>
+    <p class="hint" style="font-size:12px;color:var(--muted);margin:0 0 10px">Poniższe dane identyfikują dziecko i rodzica/opiekuna składającego zgody oraz są niezbędne do powiązania zgód z właściwym uczestnikiem turnusu.</p>
     <div class="grid">
       <div><label>Imię i nazwisko dziecka *</label><input type="text" name="dziecko" required></div>
       <div><label>Data urodzenia dziecka *</label><input type="text" name="dziecko_ur" placeholder="DD.MM.RRRR" required></div>
       <div><label>Imię i nazwisko rodzica/opiekuna *</label><input type="text" name="rodzic" required></div>
-      <div><label>Telefon *</label><input type="tel" name="tel" required></div>
-      <div><label>E-mail</label><input type="email" name="email"></div>
+      <div><label>Telefon</label><input type="tel" name="tel"><p class="req-note">Opcjonalnie — telefon nie jest wymagany do złożenia tych zgód.</p></div>
+      <div><label>E-mail</label><input type="email" name="email"><p class="req-note">Opcjonalnie — służy do kontaktu ws. wycofania zgody (4a) i/lub komunikacji marketingowej (4b).</p></div>
     </div>
+    <label class="chk" style="margin-top:6px"><input type="checkbox" name="opiekun_prawny" required><span>Oświadczam, że jestem rodzicem / opiekunem prawnym wskazanego dziecka i jestem uprawniony/a do wyrażania w jego imieniu poniższych zgód (art. 8 RODO). *</span></label>
   </section>
 
   <section class="sec">
-    <h2>Dodatek nr 4a — Zgoda na wykorzystanie wizerunku (obowiązkowe)</h2>
+    <h2>Dodatek nr 4a — Zgoda na wykorzystanie wizerunku (wymagana decyzja: TAK lub NIE)</h2>
     <div class="quote">Wyrażam zgodę / nie wyrażam zgody na użycie zdjęć/wideo mojego dziecka do promocji CampScout (strona, Instagram, Facebook, Telegram, broszury). Zgoda może być wycofana w dowolnym momencie przez e-mail lub panel klienta. Brak zgody NIE wpływa na uczestnictwo w turnusie.</div>
     <div class="radio-row">
       <label><input type="radio" name="wizerunek" value="TAK" required> ✅ TAK — wyrażam zgodę</label>
@@ -80,7 +103,7 @@
     </div>
   </section>
 
-  <div class="err" id="err">Uzupełnij wymagane pola i złóż podpis.</div>
+  <div class="err" id="err">Uzupełnij wymagane pola, potwierdź status opiekuna prawnego, dokonaj wyboru w Dodatku 4a i złóż podpis.</div>
   <div style="margin-top:16px">
     <button type="submit" class="primary">Generuj i pobierz PDF</button>
   </div>
@@ -123,10 +146,11 @@ document.getElementById('f').addEventListener('submit', (e) => {
   e.preventDefault();
   const err = document.getElementById('err');
   const fd = new FormData(e.target);
-  const dziecko = fd.get('dziecko'), dziecko_ur = fd.get('dziecko_ur'), rodzic = fd.get('rodzic'), tel = fd.get('tel'), email = fd.get('email') || '';
+  const dziecko = fd.get('dziecko'), dziecko_ur = fd.get('dziecko_ur'), rodzic = fd.get('rodzic'), tel = fd.get('tel') || '', email = fd.get('email') || '';
   const wizerunek = fd.get('wizerunek');
   const marketing = fd.get('marketing') === 'on';
-  if (!dziecko || !dziecko_ur || !rodzic || !tel || !wizerunek || !hasSignature) {
+  const opiekunPrawny = fd.get('opiekun_prawny') === 'on';
+  if (!dziecko || !dziecko_ur || !rodzic || !opiekunPrawny || !wizerunek || !hasSignature) {
     err.style.display = 'block'; return;
   }
   err.style.display = 'none';
@@ -146,7 +170,8 @@ document.getElementById('f').addEventListener('submit', (e) => {
       { text: [{ text: 'Dziecko: ', bold: true }, dziecko, '   ', { text: 'Data urodzenia: ', bold: true }, dziecko_ur], margin: [0, 2, 0, 0] },
       { text: [{ text: 'Rodzic/opiekun: ', bold: true }, rodzic], margin: [0, 2, 0, 0] },
       { text: [{ text: 'Telefon: ', bold: true }, tel, '   ', { text: 'E-mail: ', bold: true }, email || '—'], margin: [0, 2, 0, 0] },
-      { text: [{ text: 'Data i godzina złożenia: ', bold: true }, dateStr], margin: [0, 2, 0, 12] },
+      { text: [{ text: 'Data i godzina złożenia: ', bold: true }, dateStr], margin: [0, 2, 0, 2] },
+      { text: [{ text: 'Oświadczenie o statusie opiekuna prawnego: ', bold: true }, opiekunPrawny ? 'potwierdzone' : 'niepotwierdzone'], margin: [0, 2, 0, 12] },
 
       { text: 'Dodatek nr 4a — Zgoda na wykorzystanie wizerunku', fontSize: 11, bold: true, color: '#1B4332', margin: [0, 8, 0, 3] },
       { text: 'Wyrażam zgodę / nie wyrażam zgody na użycie zdjęć/wideo mojego dziecka do promocji CampScout (strona, Instagram, Facebook, Telegram, broszury). Zgoda może być wycofana w dowolnym momencie przez e-mail lub panel klienta. Brak zgody nie wpływa na uczestnictwo w turnusie.', alignment: 'justify', fontSize: 9, margin: [0, 0, 0, 6] },
