@@ -377,10 +377,9 @@ async function sendDocs(fd){
   const docNr = genDocNumber(); // один номер (дата+час подання) на обидва пакети цього кандидата
   const A_PL = buildA_PL(fd, docNr);
   const A_UA = buildA_UA(fd, docNr);
-  window.KADRY.genPL(A_PL);
-  window.KADRY.genUA(A_UA);
-  // Окрема RSPTS-згода українською (щоб кандидат розумів, що підписує) — PL-версія вже вшита в genPL()
-  try{ window.KADRY.genRSPTS(A_UA); }catch(e){ console.error('RSPTS doc generation skipped:', e); }
+  // ОДИН PDF з усіма документами (браузери блокують 2-й+ .download() поспіль —
+  // та сама проблема, що вже була виправлена у формі Данієля).
+  window.KADRY.genALL(A_PL, A_UA);
   return 'download_only';
 }
 
