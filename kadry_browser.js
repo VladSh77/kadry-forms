@@ -51,7 +51,7 @@ function docRODO(A){
     pageSize:'A4', pageMargins:[40,44,40,40], defaultStyle:{font:'Roboto',fontSize:9,color:INK},
     content:[
       ...header(), ...h1('KLAUZULA INFORMACYJNA RODO','art. 13 RODO — przetwarzanie danych zleceniobiorcy'),
-      {text:['Imię i nazwisko: ', fld(A.fullname||'Daniel Indryszczak')], margin:[0,0,0,4]},
+      {text:['Imię i nazwisko: ', fld(A.fullname||'Jan Kowalski')], margin:[0,0,0,4]},
       h2('Klauzula informacyjna (art. 13 RODO)'),
       {table:{widths:[150,'*'],body},layout:{hLineColor:()=>'#c9c9c9',vLineColor:()=>'#c9c9c9'},fontSize:8.6},
       {text:'Dane niezbędne do zawarcia i wykonania umowy oraz realizacji obowiązków prawnych są przetwarzane na podstawie art. 6 ust. 1 lit. b i c RODO — zgoda nie jest wymagana i nie warunkuje zawarcia umowy.',fontSize:8.2,margin:[0,6,0,2]},
@@ -107,7 +107,7 @@ function p(content, extra) {
 
 function docUmowa(A) {
   A = A || {};
-  const nameInst = A.name_inst || 'Danielem Indryszczakiem';
+  const nameInst = A.name_inst || 'Janem Kowalskim';
   const zam = adresZam(A);
   const zamNode = zam ? fld(zam) : bl(220);
 
@@ -262,9 +262,9 @@ function adres_zam_full(A) {
 
 function docKwestionariusz(A) {
   A = A || {};
-  const fullname = A.fullname || 'Daniel Indryszczak';
-  const tel = a(A, 'tel') || A.tel || '535 972 435';
-  const email = a(A, 'email') || A.email || 'daniel.indryszczak@gmail.com';
+  const fullname = A.fullname || 'Jan Kowalski';
+  const tel = a(A, 'tel') || A.tel || '000 000 000';
+  const email = a(A, 'email') || A.email || 'jan.kowalski@example.com';
 
   const data_miejsce = [a(A, 'data_urodzenia'), a(A, 'miejsce_urodzenia')].filter(Boolean).join(' — ');
   const azf = adres_zam_full(A);
@@ -364,7 +364,7 @@ function lblCell(t) { return { text: t, fillColor: '#f7f7f5', bold: true }; }
 
 function docZUS(A) {
   A = A || {};
-  const fullname = A.fullname || 'Daniel Indryszczak';
+  const fullname = A.fullname || 'Jan Kowalski';
 
   // --- Sekcja A — Dane ---
   const adr = adresZam(A);
@@ -495,7 +495,7 @@ function vline(v, w) {
 
 function docUpowaznienie(A) {
   A = A || {};
-  const nameAcc = A.name_acc || 'Pana Daniela Indryszczaka';
+  const nameAcc = A.name_acc || 'Pana Jana Kowalskiego';
   const justify = { alignment: 'justify', margin: [0, 4, 0, 4] };
 
   return {
